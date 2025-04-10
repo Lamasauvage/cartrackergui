@@ -38,5 +38,35 @@ class TestDataManager(unittest.TestCase):
         self.assertEqual(dm.logs[0].vehicle_id, v.id)
         self.assertEqual(dm.logs[0].maintenance_type, "Oil Change")
 
+    def test_update_mileage(self):
+        dm = DataManager()
+        v = Vehicle("CC-333-CC", "Honda", "Civic", 2005, 150000)
+        dm.add_vehicle(v)
+        m = Maintenance(
+            vehicle_id=v.id,
+            date="2024-04-10",
+            mileage=155000,
+            maintenance_type="Oil Change",
+            cost=89.90,
+            notes="Vidange + filtre à huile"
+        )
+        dm.add_log(m)
+        self.assertEqual(dm.vehicles[0].mileage, 155000)
+
+    def test_mileage_not_downgraded(self):
+        dm = DataManager()
+        v = Vehicle("DD-444-DD", "Ford", "Focus", 2010, 200000)
+        dm.add_vehicle(v)
+        m = Maintenance(
+            vehicle_id=v.id,
+            date="2024-04-10",
+            mileage=180000,  # inférieur à 200000
+            maintenance_type="Brake Pads",
+            cost=120.00
+        )
+        dm.add_log(m)
+        self.assertEqual(dm.vehicles[0].mileage, 200000)
+
+
 
 

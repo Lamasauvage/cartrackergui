@@ -51,11 +51,25 @@ class DataManager:
         if not found:
             raise ValueError("You must register the vehicle before adding a log.")
 
+        # Update mileage if needed
+        if log.mileage > v.mileage:
+            v.mileage = log.mileage
+
         self.logs.append(log)
 
+    def remove_vehicle(self, vehicle: Vehicle):
+        for v in self.vehicles:
+            if v.id == vehicle.id:
+                self.vehicles.remove(v)
+                self.logs = [log for log in self.logs if log.vehicle_id != v.id]
+                break
+        else:
+            raise ValueError("Vehicle not found")
 
-
-
-
-
-
+    def remove_log(self, log: LogEntry):
+        for l in self.logs:
+            if l.id == log.id:
+                self.logs.remove(l)
+                break
+        else:
+            raise ValueError("Log not found")
