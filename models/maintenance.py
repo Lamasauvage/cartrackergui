@@ -14,7 +14,7 @@ class Maintenance(LogEntry):
         data = super().to_dict()
         data.update({
             "type": "maintenance",
-            "maintenance_type": self.maintenance_type,
+            "maintenance_type": str(self.maintenance_type),
             "cost": self.cost,
             "notes": self.notes
         })

@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 
 from models.log_entry import LogEntry
@@ -14,7 +15,10 @@ class DataManager:
 
     def load_all(self, filename: str):
         try:
-            with open(filename, 'r') as f:
+            if not os.path.exists(filename) or os.path.getsize(filename) == 0:
+                print(f"[INFO] No data file found at '{filename}'. Starting with empty data.")
+                return
+            with open(filename, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 for vehicle_data in data['vehicles']:
                     vehicle = Vehicle.from_dict(vehicle_data)
@@ -35,12 +39,12 @@ class DataManager:
 
 
     def save_all(self, filename: str):
-        with open(filename, 'w') as f:
+        with open(filename, 'w', encoding='utf-8') as f:
             data = {
                 "vehicles": [v.to_dict() for v in self.vehicles],
                 "logs": [l.to_dict() for l in self.logs],
             }
-            json.dump(data, f)
+            json.dump(data, f, ensure_ascii=False, indent=4)
 
     def add_vehicle(self, vehicle: Vehicle):
         for v in self.vehicles:
@@ -67,7 +71,7 @@ class DataManager:
         for v in self.vehicles:
             if v.id == vehicle.id:
                 self.vehicles.remove(v)
-                self.logs = [log for log in self.logs if log.vehicle_id != v.id]
+                self.logs = [log for log in self.logs if str(log.vehicle_id) != str(v.id)]
                 break
         else:
             raise ValueError("Vehicle not found")

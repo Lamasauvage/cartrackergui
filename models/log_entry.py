@@ -13,7 +13,7 @@ class LogEntry:
     def to_dict(self):
         return {
             "id": str(self.id),
-            "vehicle_id": self.vehicle_id,
+            "vehicle_id": str(self.vehicle_id),
             "date": self.date,
             "mileage": self.mileage
         }
