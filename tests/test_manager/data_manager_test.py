@@ -67,6 +67,19 @@ class TestDataManager(unittest.TestCase):
         dm.add_log(m)
         self.assertEqual(dm.vehicles[0].mileage, 200000)
 
+    def test_edit_vehicle_success(self):
+        dm = DataManager()
+        v = Vehicle("AA-111-AA", "Mazda", "RX-7", 1993, 123456)
+        dm.add_vehicle(v)
+
+        updated = Vehicle("BB-222-BB", "Mazda", "RX-8", 2004, 54321, id=v.id)
+        dm.edit_vehicle(updated)
+
+        self.assertEqual(dm.vehicles[0].plate_number, "BB-222-BB")
+        self.assertEqual(dm.vehicles[0].model, "RX-8")
+        self.assertEqual(dm.vehicles[0].year, 2004)
+        self.assertEqual(dm.vehicles[0].mileage, 54321)
+
 
 
 

@@ -2,7 +2,7 @@ import uuid
 
 class Vehicle:
     def __init__(self, plate_number: str, make: str, model: str, year: int, mileage: int, id: str = None):
-        self.id = uuid.UUID(id) if id else uuid.uuid4()
+        self.id = id if isinstance(id, uuid.UUID) else uuid.UUID(id) if id else uuid.uuid4()
         self.plate_number = plate_number
         self.make = make
         self.model = model

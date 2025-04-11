@@ -13,20 +13,26 @@ class DataManager:
         self.logs = [] # List to store Maintenance and Fuel objects
 
     def load_all(self, filename: str):
-        with open(filename, 'r') as f:
-            data = json.load(f)
-            for vehicle_data in data['vehicles']:
-                vehicle = Vehicle.from_dict(vehicle_data)
-                self.vehicles.append(vehicle)
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+                for vehicle_data in data['vehicles']:
+                    vehicle = Vehicle.from_dict(vehicle_data)
+                    self.vehicles.append(vehicle)
 
-            for log_data in data['logs']:
-                if log_data['type'] == 'maintenance':
-                    log = Maintenance.from_dict(log_data)
-                elif log_data['type'] == 'fuel':
-                    log = Fuel.from_dict(log_data)
-                else:
-                    continue
-                self.logs.append(log)
+                for log_data in data['logs']:
+                    if log_data['type'] == 'maintenance':
+                        log = Maintenance.from_dict(log_data)
+                    elif log_data['type'] == 'fuel':
+                        log = Fuel.from_dict(log_data)
+                    else:
+                        continue
+                    self.logs.append(log)
+        except FileNotFoundError:
+            print(f"[INFO] No data file found at '{filename}'. Starting with empty data.")
+            self.vehicles = []
+            self.logs = []
+
 
     def save_all(self, filename: str):
         with open(filename, 'w') as f:
@@ -73,3 +79,21 @@ class DataManager:
                 break
         else:
             raise ValueError("Log not found")
+
+    def edit_vehicle(self, vehicle: Vehicle ):
+        for v in self.vehicles:
+            if v.id != vehicle.id and v.plate_number == vehicle.plate_number:
+                raise ValueError("Vehicle plate number already exists")
+
+        # Edit vehicle
+        for v in self.vehicles:
+            if v.id == vehicle.id:
+                v.plate_number = vehicle.plate_number
+                v.make = vehicle.make
+                v.model = vehicle.model
+                v.year = vehicle.year
+                v.mileage = vehicle.mileage
+                break
+            else:
+                raise ValueError("Vehicle not found")
+
