@@ -32,13 +32,17 @@ class DataManager:
                     else:
                         continue
                     self.logs.append(log)
+                    print("[DEBUG] Logs chargés :", self.logs)
+
+
         except FileNotFoundError:
-            print(f"[INFO] No data file found at '{filename}'. Starting with empty data.")
-            self.vehicles = []
-            self.logs = []
+                print(f"[INFO] No data file found at '{filename}'. Starting with empty data.")
+                self.vehicles = []
+                self.logs = []
 
 
     def save_all(self, filename: str):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
         with open(filename, 'w', encoding='utf-8') as f:
             data = {
                 "vehicles": [v.to_dict() for v in self.vehicles],

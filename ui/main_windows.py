@@ -1,6 +1,6 @@
 import tkinter as tk
 from core.data_manager import DataManager
-from ui.dialog import AddVehicleDialog, DeleteVehicleDialog, EditVehicleDialog, AddMaintenanceDialog, AddFuelDialog
+from ui.dialog import AddVehicleDialog, DeleteVehicleDialog, EditVehicleDialog, AddMaintenanceDialog, AddFuelDialog, ViewLogsDialog
 
 
 class MainWindow(tk.Frame):
@@ -29,6 +29,9 @@ class MainWindow(tk.Frame):
 
         self.add_fuel_button = tk.Button(button_frame, text="Add Fuel", command=self.add_fuel)
         self.add_fuel_button.pack(side=tk.LEFT, padx=5)
+
+        self.view_logs_button = tk.Button(button_frame, text="View Logs", command=self.view_logs)
+        self.view_logs_button.pack(side=tk.LEFT, padx=5)
 
 
         self.refresh_vehicle_list()
@@ -129,6 +132,22 @@ class MainWindow(tk.Frame):
                 tk.messagebox.showerror("Error", str(e))
 
         AddFuelDialog(self, vehicle, handle_add_fuel)
+
+    def view_logs(self):
+        selected = self.vehicle_listbox.curselection()
+        if not selected:
+            tk.messagebox.showwarning("Warning", "Please select a vehicle to add a fuel.")
+            return
+
+        vehicle_index = selected[0]
+        vehicle = self.data_manager.vehicles[vehicle_index]
+
+        ViewLogsDialog(self, vehicle, self.data_manager.logs)
+
+
+
+
+
 
 
 

@@ -10,8 +10,8 @@ class AddVehicleDialog(tk.Toplevel):
     def __init__(self, master, on_submit):
         super().__init__(master)
         self.title("Add New Vehicle")
-        self.geometry("300x250")
-        self.resizable(False, False)
+        self.geometry("350x300")
+        self.resizable(True, True)
         self.on_submit = on_submit
 
         tk.Label(self, text="Plate Number").pack()
@@ -61,8 +61,8 @@ class DeleteVehicleDialog(tk.Toplevel):
     def __init__(self, master, on_delete):
         super().__init__(master)
         self.title("Delete Vehicle")
-        self.geometry("300x150")
-        self.resizable(False, False)
+        self.geometry("300x250")
+        self.resizable(True, True)
         self.on_delete = on_delete
 
         # Champs de saisie
@@ -90,8 +90,8 @@ class EditVehicleDialog(tk.Toplevel):
     def __init__(self, master, vehicle, on_edit):
         super().__init__(master)
         self.title("Edit Vehicle")
-        self.geometry("300x250")
-        self.resizable(False, False)
+        self.geometry("350x300")
+        self.resizable(True, True)
         self.on_edit = on_edit
         self.vehicle = vehicle
 
@@ -149,7 +149,7 @@ class AddMaintenanceDialog(tk.Toplevel):
     def __init__(self, master, vehicle, on_add):
         super().__init__(master)
         self.title("Add Maintenance")
-        self.geometry("300x300")
+        self.geometry("350x350")
         self.resizable(False, False)
 
         self.vehicle = vehicle
@@ -210,7 +210,7 @@ class AddFuelDialog(tk.Toplevel):
     def __init__(self, master, vehicle, on_add):
         super().__init__(master)
         self.title("Add Fuel")
-        self.geometry("300x300")
+        self.geometry("350x350")
         self.resizable(False, False)
 
         self.vehicle = vehicle
@@ -267,5 +267,31 @@ class AddFuelDialog(tk.Toplevel):
 
         except ValueError:
             messagebox.showerror("Input Error", "Liters and price must be numbers.")
+
+
+class ViewLogsDialog(tk.Toplevel):
+    def __init__(self, master, vehicle, logs):
+        super().__init__(master)
+        self.title(f"Logs for {vehicle.plate_number}")
+        self.geometry("600x400")
+        self.resizable(False, False)
+
+        tk.Label(self, text="Maintenance Logs", font=("Arial", 12, "bold")).pack(pady=5)
+        self.maintenance_list = tk.Listbox(self, width=80)
+        self.maintenance_list.pack()
+
+        tk.Label(self, text="Fuel Logs", font=("Arial", 12, "bold")).pack(pady=5)
+        self.fuel_list = tk.Listbox(self, width=80)
+        self.fuel_list.pack()
+
+        for log in logs:
+            if str(log.vehicle_id) != str(vehicle.id):
+                continue
+            if isinstance(log, Maintenance):
+                self.maintenance_list.insert(tk.END, f"{log.date} - {log.maintenance_type} - ({log.notes}) - {log.cost:.2f}€ ")
+            elif isinstance(log, Fuel):
+                self.fuel_list.insert(tk.END, f"{log.date} - {log.liters}L @ {log.price:.2f}€/L ({log.location})")
+
+
 
 
