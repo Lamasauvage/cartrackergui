@@ -2,6 +2,10 @@
 
 A Python desktop application for tracking vehicle maintenance and fuel consumption.
 
+
+<img width="912" alt="Capture d’écran 2025-04-15 à 19 01 08" src="https://github.com/user-attachments/assets/15d6220c-d7ab-4fc2-a23a-2b894b5699bf" />
+
+
 ## Features
 
 - Manage multiple vehicles (add, edit, delete)
