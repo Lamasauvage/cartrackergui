@@ -57,19 +57,17 @@ class DataManager:
         self.vehicles.append(vehicle)
 
     def add_log(self, log: LogEntry):
-        found = False
+        vehicle_found = None
         for v in self.vehicles:
             if v.id == log.vehicle_id:
-                found = True
+                vehicle_found = v
                 break
-        if not found:
+        if not vehicle_found:
             raise ValueError("You must register the vehicle before adding a log.")
-
-        # Update mileage if needed
-        if log.mileage > v.mileage:
-            v.mileage = log.mileage
-
+        if log.mileage > vehicle_found.mileage:
+            vehicle_found.mileage = log.mileage
         self.logs.append(log)
+
 
     def remove_vehicle(self, vehicle: Vehicle):
         for v in self.vehicles:
@@ -93,7 +91,7 @@ class DataManager:
             if v.id != vehicle.id and v.plate_number == vehicle.plate_number:
                 raise ValueError("Vehicle plate number already exists")
 
-        # Edit vehicle
+    # Edit vehicle
         for v in self.vehicles:
             if v.id == vehicle.id:
                 v.plate_number = vehicle.plate_number
@@ -102,6 +100,5 @@ class DataManager:
                 v.year = vehicle.year
                 v.mileage = vehicle.mileage
                 break
-            else:
-                raise ValueError("Vehicle not found")
-
+        else:
+            raise ValueError("Vehicle not found")
