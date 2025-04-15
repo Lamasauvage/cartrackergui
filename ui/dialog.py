@@ -321,7 +321,7 @@ class ViewLogsDialog(tk.Toplevel):
                 self.maintenance_list.insert(tk.END, f"{log.date} - {log.maintenance_type} - ({log.notes}) - {log.cost:.2f}€")
                 current_maintenance_total += log.cost
             elif isinstance(log, Fuel):
-                self.fuel_list.insert(tk.END, f"{log.date} - {log.liters}L @ {log.price:.2f}€ ({log.location})")
+                self.fuel_list.insert(tk.END, f"{log.date} - {log.fuel_type} - {log.liters}L - {log.price:.2f}€ ({log.location})")
                 current_fuel_total += log.price
 
         self.maintenance_total_label.config(text=f"Total Coûts Maintenance : {current_maintenance_total:.2f}€")

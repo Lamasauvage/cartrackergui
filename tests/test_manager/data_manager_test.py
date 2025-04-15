@@ -60,7 +60,7 @@ class TestDataManager(unittest.TestCase):
         m = Maintenance(
             vehicle_id=v.id,
             date="2024-04-10",
-            mileage=180000,  # inférieur à 200000
+            mileage=180000,
             maintenance_type="Brake Pads",
             cost=120.00
         )
