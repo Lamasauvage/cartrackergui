@@ -136,13 +136,16 @@ class MainWindow(tk.Frame):
     def view_logs(self):
         selected = self.vehicle_listbox.curselection()
         if not selected:
-            tk.messagebox.showwarning("Warning", "Please select a vehicle to add a fuel.")
+            tk.messagebox.showwarning("Warning", "Please select a vehicle to view logs.")
             return
 
         vehicle_index = selected[0]
         vehicle = self.data_manager.vehicles[vehicle_index]
 
-        ViewLogsDialog(self, vehicle, self.data_manager.logs)
+        def handle_log_edit():
+            self.data_manager.save_all("data/garage_data.json")
+
+        ViewLogsDialog(self, vehicle, self.data_manager.logs, handle_log_edit)
 
 
 
