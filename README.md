@@ -135,10 +135,6 @@ The application includes unit tests for core functionality:
 - `test_manager/data_manager_test.py`: Tests for the DataManager class
 - `test_models/vehicle_test.py`: Tests for the Vehicle model
 
-Run tests using unittest:
-```
-python -m unittest discover tests
-```
 
 ## Contributing
 
