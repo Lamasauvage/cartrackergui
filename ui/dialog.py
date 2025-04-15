@@ -273,7 +273,7 @@ class ViewLogsDialog(tk.Toplevel):
     def __init__(self, master, vehicle, logs, on_log_edit):
         super().__init__(master)
         self.title(f"Logs for {vehicle.plate_number}")
-        self.geometry("700x600")
+        self.geometry("700x650")
         self.resizable(False, False)
 
         self.vehicle = vehicle
@@ -283,30 +283,56 @@ class ViewLogsDialog(tk.Toplevel):
         tk.Button(self, text="Edit Selected Maintenance", command=self.edit_selected_maintenance).pack(pady=5)
         tk.Button(self, text="Edit Selected Fuel", command=self.edit_selected_fuel).pack(pady=5)
 
-        tk.Label(self, text="Maintenance Logs", font=("Arial", 12, "bold")).pack(pady=5)
-        self.maintenance_list = tk.Listbox(self, width=80)
-        self.maintenance_list.pack()
+        tk.Label(self, text="Maintenance Logs", font=("Arial", 12, "bold")).pack(pady=(10, 2))
+        self.maintenance_list = tk.Listbox(self, width=80, height=10)
+        self.maintenance_list.pack(padx=10)
 
-        tk.Label(self, text="Fuel Logs", font=("Arial", 12, "bold")).pack(pady=5)
-        self.fuel_list = tk.Listbox(self, width=80)
-        self.fuel_list.pack()
+        tk.Label(self, text="Fuel Logs", font=("Arial", 12, "bold")).pack(pady=(10, 2))
+        self.fuel_list = tk.Listbox(self, width=80, height=10)
+        self.fuel_list.pack(padx=10)
+
+        self.fuel_total_label = tk.Label(
+            self,
+            text="Total Carburant : Calcul...",
+            font=("Arial", 13, "bold"),
+        )
+        self.maintenance_total_label = tk.Label(
+            self,
+            text="Total Maintenance : Calcul...",
+            font=("Arial", 13, "bold"),
+        )
+
+        self.fuel_total_label.pack(side=tk.BOTTOM, fill=tk.X)
+        self.maintenance_total_label.pack(side=tk.BOTTOM, fill=tk.X)
 
         self.refresh_logs()
 
     def refresh_logs(self):
         self.maintenance_list.delete(0, tk.END)
         self.fuel_list.delete(0, tk.END)
+
+        current_fuel_total = 0.0
+        current_maintenance_total = 0.0
+
         for log in self.logs:
             if str(log.vehicle_id) != str(self.vehicle.id):
                 continue
             if isinstance(log, Maintenance):
                 self.maintenance_list.insert(tk.END, f"{log.date} - {log.maintenance_type} - ({log.notes}) - {log.cost:.2f}€")
+                current_maintenance_total += log.cost
             elif isinstance(log, Fuel):
-                self.fuel_list.insert(tk.END, f"{log.date} - {log.liters}L @ {log.price:.2f}€/L ({log.location})")
+                self.fuel_list.insert(tk.END, f"{log.date} - {log.liters}L @ {log.price:.2f}€ ({log.location})")
+                current_fuel_total += log.price
+
+        self.maintenance_total_label.config(text=f"Total Coûts Maintenance : {current_maintenance_total:.2f}€")
+        self.fuel_total_label.config(text=f"Total Coûts Carburant : {current_fuel_total:.2f}€")
+
 
     def get_nth_log_of_type(self, cls, n):
         filtered = [log for log in self.logs if isinstance(log, cls) and str(log.vehicle_id) == str(self.vehicle.id)]
-        return filtered[n]
+        if n < len(filtered):
+            return filtered[n]
+        return None
 
     def edit_selected_maintenance(self):
         selected = self.maintenance_list.curselection()
@@ -315,8 +341,8 @@ class ViewLogsDialog(tk.Toplevel):
             return
         index = selected[0]
         log = self.get_nth_log_of_type(Maintenance, index)
-
-        EditMaintenanceDialog(self, log, self._handle_edit)
+        if log:
+            EditMaintenanceDialog(self, log, self._handle_edit)
 
     def edit_selected_fuel(self):
         selected = self.fuel_list.curselection()
@@ -325,8 +351,8 @@ class ViewLogsDialog(tk.Toplevel):
             return
         index = selected[0]
         log = self.get_nth_log_of_type(Fuel, index)
-
-        EditFuelDialog(self, log, self._handle_edit)
+        if log:
+            EditFuelDialog(self, log, self._handle_edit)
 
     def _handle_edit(self):
         self.on_log_edit()

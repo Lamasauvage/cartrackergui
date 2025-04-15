@@ -102,3 +102,11 @@ class DataManager:
                 break
         else:
             raise ValueError("Vehicle not found")
+
+    # Get total maintenance cost for a vehicle
+    def get_total_maintenance_cost(self, vehicle_id: str):
+        total_cost = 0
+        for log in self.logs:
+            if isinstance(log, Maintenance) and str(log.vehicle_id) == str(vehicle_id):
+                total_cost += log.cost
+        return total_cost

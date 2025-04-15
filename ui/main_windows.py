@@ -33,7 +33,6 @@ class MainWindow(tk.Frame):
         self.view_logs_button = tk.Button(button_frame, text="View Logs", command=self.view_logs)
         self.view_logs_button.pack(side=tk.LEFT, padx=5)
 
-
         self.refresh_vehicle_list()
 
     def refresh_vehicle_list(self):
@@ -146,14 +145,3 @@ class MainWindow(tk.Frame):
             self.data_manager.save_all("data/garage_data.json")
 
         ViewLogsDialog(self, vehicle, self.data_manager.logs, handle_log_edit)
-
-
-
-
-
-
-
-
-
-
-
